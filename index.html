@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiff Kiff</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://kiff-kiff.fr/">
+<style>
+  html, body { margin: 0; height: 100%; background: #2B040C; color: #F7E9D3; font: 17px/1.5 system-ui, -apple-system, sans-serif; }
+  body { display: grid; place-items: center; padding: 24px; box-sizing: border-box; text-align: center; }
+  a { color: #F6DDA0; }
+</style>
+<script>
+/* Kiff Kiff a déménagé sur kiff-kiff.fr.
+   Cette page reste à l’ancienne adresse pour les liens, les QR codes et les applis déjà installées.
+   Elle emporte ce que le téléphone gardait ici (parties à deux, prénoms, ambiance, réglages) dans
+   le « # » du lien, qui n’est jamais envoyé à un serveur, puis ouvre la même page sur kiff-kiff.fr. */
+(function () {
+  var NOUVEAU = 'https://kiff-kiff.fr';
+  var GARDER = /^roue:/, LAISSER = /^roue:(mots|vapid|push|meilleurs)$/;
+  var data = {}, n = 0;
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (GARDER.test(k) && !LAISSER.test(k)) { data[k] = localStorage.getItem(k); n++; }
+    }
+  } catch (e) { /* stockage indisponible : on déménage sans bagages */ }
+  var pack = '';
+  if (n) {
+    try {
+      var bytes = new TextEncoder().encode(JSON.stringify(data)), s = '';
+      for (var j = 0; j < bytes.length; j++) s += String.fromCharCode(bytes[j]);
+      pack = btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    } catch (e) { pack = ''; }
+  }
+  var chemin = location.pathname.replace(/^\/roue-du-consentement/, '') || '/';
+  var dieze = location.hash.replace(/^#/, '');
+  var frag = [pack ? 'import=' + pack : '', dieze].filter(Boolean).join('&');
+  location.replace(NOUVEAU + chemin + location.search + (frag ? '#' + frag : ''));
+})();
+</script>
+</head>
+<body>
+<p>Kiff Kiff a déménagé&nbsp;: <a href="https://kiff-kiff.fr/">kiff-kiff.fr</a></p>
+</body>
+</html>
